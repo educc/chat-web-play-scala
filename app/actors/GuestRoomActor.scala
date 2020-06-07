@@ -1,7 +1,5 @@
 package actors
 
-import java.util.stream.Collectors
-
 import akka.actor.{Actor, ActorLogging, ActorRef, Props, Timers}
 
 import scala.concurrent.duration._
@@ -35,7 +33,7 @@ class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorL
 
   override def postStop(): Unit = {
     if (!userName.isEmpty) {
-      roomRef ! RoomActor.BroadcastMessage(f"system: bye $userName")
+      roomRef ! RoomActor.BroadcastMessage(f"system: bye $userName ")
     }
     roomRef ! RoomActor.RemoveGuest(self)
     super.postStop()
