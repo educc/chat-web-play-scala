@@ -10,6 +10,40 @@
 * argument is an `Html` object containing the body of the page.
 *@
 @main("Chat Room") {
-    <p>Room Id: @roomId</p>
-    <p>Your chat here</p>
+    <section id="app">
+        <p>
+          <input type="text" v-on:keydown.enter="onEnter">
+        </p>
+        <p>Messages:</p>
+        <p v-for="msg in messages">
+            {{ msg }}
+        </p>
+    </section>
+    <script>
+        let wsUri = "ws://" + window.location.host + window.location.pathname + "/ws";
+        console.log(wsUri);
+        let socket = new WebSocket(wsUri);
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                messages: [],
+            },
+            created(){
+                socket.onmessage = ev => {
+                    console.log("from socket: " + ev);
+                    this.messages.push(ev.data);
+                }
+            },
+            methods: {
+                onEnter(e) {
+                    const msg = e.target.value;
+                    e.target.value = "";
+
+                    console.log("Local: " + msg);
+                    socket.send(msg);
+                }
+            }
+        })
+    </script>
 }

@@ -21,7 +21,7 @@ class RoomManagerActor extends Actor {
   override def receive: Receive = {
     case Create =>
       val name = UUID.randomUUID().toString
-      val roomRef = context.actorOf(RoomActor.props(name))
+      val roomRef = context.actorOf(RoomActor.props)
       context.watch(roomRef)
       rooms += name -> roomRef
       sender() ! RoomCreated(name)
