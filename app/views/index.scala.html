@@ -1,14 +1,37 @@
 @*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
+* This template takes a single argument, a String containing a
+* message to display.
+*@
 @(message: String)
-
 @*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Chat") {
-    <a href="/room/create">Crear sala para Chat</a>
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
+@main("Terminal Chat") {
+    <div class="app">
+        <section class="content">
+            <p>&nbsp;</p>
+            <p>&gt; system: Press ENTER, to chat with your friends </p>
+            <span id="hideel" style="display: none"></span>
+        </section>
+        <footer>
+            <p class="terminal-prompt"></p>
+        </footer>
+    </div>
+
+    <script>
+            const hideEl = document.getElementById("hideel");
+            const el = document.getElementsByTagName("BODY")[0];
+            el.addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    const link = document.createElement("a");
+                    link.id = 'someLink'; //give it an ID!
+                    link.href = "/room/create";
+
+                    hideEl.append(link);
+                    document.getElementById('someLink').click();
+                }
+            });
+    </script>
 }

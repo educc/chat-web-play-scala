@@ -26,7 +26,7 @@ class ChatController @Inject()(@Named("room-manager") roomManagerActor: ActorRef
       case Some(_) =>
         Ok(views.html.chat(roomId))
       case _ =>
-        NotFound
+        Redirect("/")
     }
   }
 
