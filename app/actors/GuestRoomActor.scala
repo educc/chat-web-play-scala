@@ -2,6 +2,7 @@ package actors
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props, Timers}
 
+import scala.concurrent.duration._
 
 object GuestRoomActor {
   case class Message(msg: String)
@@ -22,6 +23,12 @@ class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorL
     case msg: String => //message from web browser client
       log.info("from browser: " + msg)
       roomRef ! RoomActor.BroadcastMessage(msg)
+
+    case Tick =>
+      out ! "server.heartbeat"
   }
+
+  private case object Tick
+  timers.startTimerAtFixedRate("heartbeat", Tick, 3.seconds)
 
 }

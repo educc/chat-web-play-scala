@@ -20,6 +20,7 @@
         </p>
     </section>
     <script>
+        const heartbeatMsg = "server.heartbeat"
         let wsUri = "ws://" + window.location.host + window.location.pathname + "/ws";
         console.log(wsUri);
         let socket = new WebSocket(wsUri);
@@ -32,6 +33,7 @@
             created(){
                 socket.onmessage = ev => {
                     console.log("from socket: " + ev);
+                    if (ev.data === heartbeatMsg) return;
                     this.messages.push(ev.data);
                 }
             },
