@@ -35,7 +35,7 @@ class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorL
 
   override def postStop(): Unit = {
     if (!userName.isEmpty) {
-      roomRef ! RoomActor.BroadcastMessage(f"system: $userName was gone")
+      roomRef ! RoomActor.BroadcastMessage(f"system: bye $userName")
     }
     roomRef ! RoomActor.RemoveGuest(self)
     super.postStop()
