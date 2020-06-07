@@ -93,6 +93,7 @@
                             this.userName = this.userMessage;
                             this.state = STATE_JOINED;
                             this.userMessage = ""
+                            socket.send("cmd:name=" + this.userName)
                             return;
                         }
 

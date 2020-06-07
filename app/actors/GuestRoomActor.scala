@@ -26,8 +26,7 @@ class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorL
 
     case msg: String => //message from web browser client
       log.info("from browser: " + msg)
-      roomRef ! RoomActor.BroadcastMessage(msg)
-      this.userName = extractName(msg)
+      processCommand(msg)
 
     case Tick =>
       out ! "server.heartbeat"
@@ -35,17 +34,21 @@ class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorL
 
 
   override def postStop(): Unit = {
-    roomRef ! RoomActor.BroadcastMessage(f"system: $userName was gone")
+    if (!userName.isEmpty) {
+      roomRef ! RoomActor.BroadcastMessage(f"system: $userName was gone")
+    }
     roomRef ! RoomActor.RemoveGuest(self)
     super.postStop()
   }
 
-  private def extractName(str: String) = {
-    str
-      .toCharArray
-      .takeWhile(_ != ':')
-      .map(_.toString)
-      .reduce((a, b) => a+b)
+  private def processCommand(msg: String) = {
+    msg match {
+      case s"cmd:name=$userName" =>
+        this.userName = userName
+        roomRef ! RoomActor.BroadcastMessage("system: welcome " + this.userName)
+      case _ =>
+        roomRef ! RoomActor.BroadcastMessage(msg)
+    }
   }
 
   private case object Tick
