@@ -51,7 +51,7 @@
                         console.log("from socket: " + ev);
                         if (ev.data === heartbeatMsg) return;
                         this.messages.push(ev.data);
-                        //this.goToBottom();
+                        this.goToBottom();
                     }
                     document.getElementsByTagName("BODY")[0].addEventListener("keydown", this.onKeyDown);
                 },
@@ -102,8 +102,10 @@
                         }
                     },
                     goToBottom() {
-                        const element = document.getElementsByClassName("content")[0];
-                        element.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                        setInterval(() => {
+                            const sectionElement = document.querySelector('section.content');
+                            sectionElement.scrollTop = sectionElement.scrollHeight - sectionElement.clientHeight;
+                        }, 200);
                     }
                 }
             })
