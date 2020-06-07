@@ -10,13 +10,13 @@ object RoomManagerActor {
   case class FindRoom(roomName: String)
   case class RoomFound(roomActor: Option[ActorRef])
 
-  def props = Props[RoomManagerActor]
+  def props: Props = Props[RoomManagerActor]
 }
 
 class RoomManagerActor extends Actor {
   import RoomManagerActor._
 
-  var rooms = Map[String, ActorRef]()
+  private var rooms = Map[String, ActorRef]()
 
   override def receive: Receive = {
     case Create =>

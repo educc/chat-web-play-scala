@@ -7,13 +7,13 @@ object RoomActor {
   case class BroadcastMessage(msg: String)
   case class AddGuest(ref: ActorRef)
 
-  def props  = Props[RoomActor]
+  def props: Props = Props[RoomActor]
 }
 
 class RoomActor extends Actor with ActorLogging {
   import RoomActor._
 
-  var guests = Seq[ActorRef]()
+  private var guests = Seq[ActorRef]()
 
   override def receive: Receive = {
 

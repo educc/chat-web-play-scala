@@ -7,7 +7,7 @@ import scala.concurrent.duration._
 object GuestRoomActor {
   case class Message(msg: String)
 
-  def props(out: ActorRef, room: ActorRef) = Props.create(classOf[GuestRoomActor], out, room)
+  def props(out: ActorRef, room: ActorRef): Props = Props.create(classOf[GuestRoomActor], out, room)
 }
 
 class GuestRoomActor(out: ActorRef, roomRef: ActorRef) extends Actor with ActorLogging with Timers {
