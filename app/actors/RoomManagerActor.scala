@@ -38,9 +38,13 @@ class RoomManagerActor extends Actor with ActorLogging {
       sender() ! RoomFound(actorFound)
 
     case GuestByRoom =>
-      val queryActor = context.actorOf(RoomQueryActor.props(rooms.size, 3.seconds, sender()))
-      rooms.values.foreach { it =>
-        it ! RoomActor.HowManyGuest(queryActor)
+      if (rooms.isEmpty) {
+        sender() ! GuestByRoomSummarize(List())
+      } else {
+        val queryActor = context.actorOf(RoomQueryActor.props(rooms.size, 3.seconds, sender()))
+        rooms.values.foreach { it =>
+          it ! RoomActor.HowManyGuest(queryActor)
+        }
       }
 
     case RoomQueryActor.TotalGuestByRoom(data, originalSender) =>
