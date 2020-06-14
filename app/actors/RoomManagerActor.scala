@@ -2,18 +2,19 @@ package actors
 
 import java.util.UUID
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, OneForOneStrategy, Props, SupervisorStrategy, Terminated}
 
 object RoomManagerActor {
   case object Create
-  case class RoomCreated(roomName: String)
   case class FindRoom(roomName: String)
+
+  case class RoomCreated(roomName: String)
   case class RoomFound(roomActor: Option[ActorRef])
 
   def props: Props = Props[RoomManagerActor]
 }
 
-class RoomManagerActor extends Actor {
+class RoomManagerActor extends Actor with ActorLogging {
   import RoomManagerActor._
 
   private var rooms = Map[String, ActorRef]()
@@ -27,11 +28,13 @@ class RoomManagerActor extends Actor {
       sender() ! RoomCreated(name)
 
     case FindRoom(name) =>
-      rooms.get(name) match {
-        case Some(actor) =>
-          sender() ! RoomFound(Option(actor))
-        case _  =>
-          sender ! RoomFound(Option.empty)
+      val actorFound = rooms.get(name)
+      sender() ! RoomFound(actorFound)
+
+    case e: Terminated =>
+      rooms.find(_._2 == e.actor).foreach { found =>
+        log.info("removing actor room: " + found._1)
+        rooms -= found._1
       }
   }
 }

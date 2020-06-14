@@ -23,10 +23,14 @@ class RoomActor extends Actor with ActorLogging {
       log.info("welcome, total guests: " + guests.size)
 
     case RemoveGuest(ref) =>
-      log.info("Total guests: " + guests.size)
       log.info(ref.toString())
       guests -= ref
-      log.info("Total after remove: " + guests.size)
+
+      log.info("Removing guest. Total guests: " + guests.size)
+      if (guests.isEmpty) {
+        context.stop(self) // stop actor when is a empty room
+        log.info("stopping actor room: " + self)
+      }
 
     case BroadcastMessage(msg) =>
       guests.keys.foreach {ref =>
