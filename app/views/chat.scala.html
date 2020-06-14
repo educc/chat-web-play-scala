@@ -103,7 +103,7 @@
                         }
                     },
                     goToBottom() {
-                        setInterval(() => {
+                        setTimeout(() => {
                             const sectionElement = document.querySelector('section.content');
                             sectionElement.scrollTop = sectionElement.scrollHeight - sectionElement.clientHeight;
                         }, 200);
