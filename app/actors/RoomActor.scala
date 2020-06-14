@@ -7,11 +7,13 @@ object RoomActor {
   case class BroadcastMessage(msg: String)
   case class AddGuest(ref: ActorRef)
   case class RemoveGuest(ref: ActorRef)
+  case class HowManyGuest(replyTo: ActorRef)
+  case class GuestCount(roomName: String, count: Int)
 
-  def props: Props = Props[RoomActor]
+  def props(roomName: String): Props = Props.create(classOf[RoomActor], roomName)
 }
 
-class RoomActor extends Actor with ActorLogging {
+class RoomActor(roomName: String) extends Actor with ActorLogging {
   import RoomActor._
 
   private var guests = Map.empty[ActorRef, Int] withDefaultValue 0
@@ -31,6 +33,9 @@ class RoomActor extends Actor with ActorLogging {
         context.stop(self) // stop actor when is a empty room
         log.info("stopping actor room: " + self)
       }
+
+    case HowManyGuest(replyTo) =>
+      replyTo ! GuestCount(roomName, guests.size)
 
     case BroadcastMessage(msg) =>
       guests.keys.foreach {ref =>

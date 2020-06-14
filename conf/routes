@@ -11,6 +11,8 @@ GET     /room/create                    controllers.RoomController.createRoom
 GET     /chat/:roomId                    controllers.ChatController.room(roomId: String)
 GET     /chat/:roomId/ws                    controllers.ChatController.socket(roomId: String)
 
+GET     /statistics/rooms.json                    controllers.StatisticsController.roomStatistics
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
