@@ -3,7 +3,7 @@
 ### Requirements
 - Java 11
 - sbt
-- Scala 12
+- Scala 2.13
 
 ### How to run
 ```sh
