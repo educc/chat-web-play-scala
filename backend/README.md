@@ -1,4 +1,5 @@
 # chat-web-play-scala
+A real time chat build with Play Framework and Akka Actors.
 
 ### Requirements
 - Java 11
