@@ -16,16 +16,15 @@ object RoomActor {
 class RoomActor(roomName: String) extends Actor with ActorLogging {
   import RoomActor._
 
-  private var guests = Map.empty[ActorRef, Int] withDefaultValue 0
+  private var guests = Set.empty[ActorRef]
 
   override def receive: Receive = {
 
     case AddGuest(ref) =>
-      guests += ref -> 0
+      guests += ref
       log.info("welcome, total guests: " + guests.size)
 
     case RemoveGuest(ref) =>
-      log.info(ref.toString())
       guests -= ref
 
       log.info("Removing guest. Total guests: " + guests.size)
@@ -38,7 +37,7 @@ class RoomActor(roomName: String) extends Actor with ActorLogging {
       replyTo ! GuestCount(roomName, guests.size)
 
     case BroadcastMessage(msg) =>
-      guests.keys.foreach {ref =>
+      guests.foreach {ref =>
         ref ! GuestRoomActor.Message(msg)
       }
   }

@@ -10,7 +10,7 @@ import akka.util.Timeout
 import play.api.Logging
 import play.api.libs.streams.ActorFlow
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext}
 import scala.concurrent.duration._
 
 @Singleton
@@ -42,7 +42,7 @@ class ChatController @Inject()(@Named("room-manager") roomManagerActor: ActorRef
     }
   }
 
-  def findRoom(roomId: String) = {
+  private def findRoom(roomId: String) = {
     (roomManagerActor ? RoomManagerActor.FindRoom(roomId))
       .mapTo[RoomManagerActor.RoomFound]
       .map(_.roomActor)
